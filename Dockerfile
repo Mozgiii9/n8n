@@ -1,14 +1,18 @@
 # Файл: Dockerfile
 
+# Стадия сборки: обычный Alpine с apk, тут собираем нужные бинарники
+FROM alpine:3.22 AS deps
+RUN apk add --no-cache ffmpeg curl
+
+# Финальный образ: hardened n8n, пакетный менеджер недоступен — поэтому копируем готовое
 FROM ghcr.io/n8n-io/n8n:1.123.46
 USER root
 
-# Диагностика: выведет дистрибутив и какой пакетный менеджер реально есть.
-# Видно будет в логах билда Railway. Можно удалить после успешной сборки.
-RUN cat /etc/os-release || true; command -v apk apt-get apk-tools 2>/dev/null || true
-
-# Возврат к apk (база n8n — Alpine). apt-get на Alpine отсутствует → отсюда был exit 127.
-RUN apk add --no-cache ffmpeg curl
+# Копируем ffmpeg, curl и их разделяемые библиотеки из стадии deps.
+# ВНИМАНИЕ: список .so зависит от сборки; ниже базовый набор, может потребоваться дополнить.
+COPY --from=deps /usr/bin/ffmpeg /usr/bin/ffmpeg
+COPY --from=deps /usr/bin/curl   /usr/bin/curl
+COPY --from=deps /usr/lib/        /usr/lib/
 
 RUN chown -R node:node /home/node/.n8n
 USER node
