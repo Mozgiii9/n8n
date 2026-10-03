@@ -5,7 +5,7 @@ FROM alpine:3.22 AS deps
 RUN apk add --no-cache ffmpeg curl
 
 # Финальный образ: hardened n8n, пакетный менеджер недоступен — поэтому копируем готовое
-FROM ghcr.io/n8n-io/n8n:1.123.46
+FROM ghcr.io/n8n-io/n8n:2.41.6
 USER root
 
 # Копируем ffmpeg, curl и их разделяемые библиотеки из стадии deps.
