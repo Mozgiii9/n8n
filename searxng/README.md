@@ -27,7 +27,9 @@ N8N_INSTANCE_AI_SEARXNG_URL=http://searxng.railway.internal:8080
 
 ## Обновление
 
-Источник сервиса — этот GitHub-репозиторий, ветка `main`, Root Directory `/searxng`, файл конфигурации `/searxng/railway.toml`. Изменения отслеживаются в `/searxng/**`.
+Источник сервиса — этот GitHub-репозиторий, ветка `main`, Root Directory `/searxng`. Изменения отслеживаются в `/searxng/**`; healthcheck, лимиты ресурсов и политика перезапуска заданы в настройках сервиса Railway через API. Устаревший формат `railway.toml` не используется.
+
+Для сервиса n8n отслеживаются `/Dockerfile` и `/.dockerignore`, поэтому изменение только конфигурации поиска не перезапускает n8n.
 
 При обновлении сначала замените digest официального образа в `Dockerfile`. После развертывания проверьте `/healthz` и `/search?q=n8n&format=json` из контейнера n8n, затем штатный клиент SearXNG Assistant. Ответ HTTP 200 без релевантных результатов не считается успешной проверкой.
 
