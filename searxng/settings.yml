@@ -1,0 +1,27 @@
+# JSON API доступен только внутри проекта Railway.
+use_default_settings:
+  engines:
+    keep_only:
+      - yahoo
+
+general:
+  instance_name: "n8n Web Search"
+
+search:
+  formats:
+    - html
+    - json
+
+server:
+  # Секрет задаётся отдельно переменной SEARXNG_SECRET в Railway.
+  limiter: false
+  public_instance: false
+  image_proxy: false
+
+outgoing:
+  request_timeout: 5.0
+  max_request_timeout: 10.0
+
+engines:
+  - name: yahoo
+    disabled: false
